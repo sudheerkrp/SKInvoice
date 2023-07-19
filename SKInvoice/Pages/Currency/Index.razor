@@ -1,0 +1,91 @@
+﻿@page "/currency"
+<h1 class="text-center">Currency Management</h1>
+<div class="text-center">
+	<a type="button" class="btn btn-primary btn-sm" href="/currency/create">Add New Currency</a>
+	<hr />
+	<table class="table table-sm table-striped table-hover">
+		<thead>
+			<tr>
+				<th scope="col">S.N.</th>
+				<th scope="col">Currrency Name</th>
+				<th scope="col">Currency Symbol</th>
+				<th scope="col">Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			@if(CurrencyList != null)
+				@foreach (var currency in CurrencyList)
+				{
+					<tr>
+						<td>@(cnt++).</td>
+						<td>@currency.Name</td>
+						<td>@currency.Symbol</td>
+						<td>
+							<button type="button" class="btn btn-success" @onclick="(()=>ShowEditModal(currency.Id))">Edit</button>
+							<button type="button" class="btn btn-danger" @onclick="(()=>ShowDeleteModal(currency.Id))">Delete</button>
+						</td>
+					</tr>
+				}
+		</tbody>
+	</table>
+</div>
+
+@if(IsEditModalOpen)
+{
+	<div class="modal fade show" id="edit-currency-modal" tabindex="-1" aria-labelledby="edit-currency-modal-label" style="display:block">
+		<div class="modal-dialog">
+			<EditForm Model="@CurrencyToEdit" OnValidSubmit="@EditCurrency">
+				<input type="hidden" asp-for="Themovie.Id">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="edit-currency-modal-label">Edit Currency</h5>
+						<button type="button" class="btn-close" @onclick="HideEditModal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<div class="mb-3">
+							<label for="currency-name" class="form-label">Currency Name</label>
+							<InputText id="currency-name" class="form-control" @bind-Value="@CurrencyToEdit.Name" placeholder="Enter the Name of Currency" required />
+						</div>
+
+						<div class="mb-3">
+							<label for="currency-symbol" class="form-label">Currency Symbol</label>
+							<InputDate class="form-control" @bind-Value="@CurrencyToEdit.Symbol" placeholder="Enter Symbol of Currency" required />
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" @onclick="HideEditModal">Close</button>
+						<button type="submit" class="btn btn-primary" @onclick="HideEditModal">Submit</button>
+					</div>
+				</div>
+			</EditForm>
+		</div>
+	</div>
+}
+
+
+@if(IsDeleteModalOpen)
+{
+	<div class="modal fade show" id="delete-currency-modal" tabindex="-1" aria-labelledby="delete-currency-modal-label" style="display:block">
+		<div class="modal-dialog">
+			@*<EditForm Model="@MovieToAdd" OnValidSubmit="@DeleteCurrency">*@
+			<EditForm OnValidSubmit="@DeleteCurrency">
+				<input type="hidden">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="delete-currency-modal-label">Delete Currency</h5>
+						<button type="button" class="btn-close" @onclick="HideDeleteModal"></button>
+					</div>
+					<div class="modal-body">
+						<p style="color:#FF0000" ;>
+							Do you really want to delete the currency?
+						</p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" @onclick="HideDeleteModal">Close</button>
+						<button type="submit" class="btn btn-primary" @onclick="HideDeleteModal">Delete</button>
+					</div>
+				</div>
+			</EditForm>
+		</div>
+	</div>
+}

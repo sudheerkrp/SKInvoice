@@ -1,0 +1,16 @@
+﻿@page "/currency/create"
+<h3>Add Currency</h3>
+<div>
+			<EditForm Model="@CurrencyToCreate" OnValidSubmit="@CreateCurrency">
+				<div class="mb-3">
+					<label for="currency-name" class="form-label">Currency Name</label>
+					<InputText style="width:300px" class="form-control" id="currency-name" @bind-Value="@CurrencyToCreate.Name" placeholder="Enter Name of the Currency" required />
+				</div
+				<div class="mb-3">
+					<label for="currency-symbol" class="form-label">Currency Symbol</label>
+					<InputText style="width:300px" class="form-control" id="currency-symbol" @bind-Value="@CurrencyToCreate.Symbol" placeholder="Enter Symbol of the Currency" required />
+				</div>
+				<a type="button" class="btn btn-secondary" href="/currency">Cancel</a>
+				<button type="submit" class="btn btn-primary" @onclick="CreateCurrency">Submit</button>
+			</EditForm>
+</div>

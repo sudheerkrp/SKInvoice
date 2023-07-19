@@ -1,0 +1,222 @@
+USE [SK_Invoice_DB]
+GO
+
+/****** Object:  Table [dbo].[Currencies]    Script Date: 20-07-2023 12:16:25 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Currencies](
+	[Id] [uniqueidentifier] NULL,
+	[Name] [varchar](255) NOT NULL,
+	[Symbol] [varchar](10) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Name] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+UNIQUE NONCLUSTERED 
+(
+	[Symbol] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+USE [SK_Invoice_DB]
+GO
+
+/****** Object:  Table [dbo].[UsersStatus]    Script Date: 20-07-2023 12:18:05 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[UsersStatus](
+	[Id] [uniqueidentifier] NOT NULL,
+	[Status] [varchar](255) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+UNIQUE NONCLUSTERED 
+(
+	[Status] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+USE [SK_Invoice_DB]
+GO
+
+/****** Object:  Table [dbo].[Users]    Script Date: 20-07-2023 12:17:50 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Users](
+	[Id] [uniqueidentifier] NOT NULL,
+	[Email] [varchar](255) NULL,
+	[Name] [varchar](255) NULL,
+	[Password] [varchar](255) NULL,
+	[Status] [uniqueidentifier] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+UNIQUE NONCLUSTERED 
+(
+	[Email] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Users]  WITH CHECK ADD FOREIGN KEY([Status])
+REFERENCES [dbo].[UsersStatus] ([Id])
+GO
+
+USE [SK_Invoice_DB]
+GO
+
+/****** Object:  Table [dbo].[InvoiceTypes]    Script Date: 20-07-2023 12:16:57 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[InvoiceTypes](
+	[Id] [uniqueidentifier] NOT NULL,
+	[Name] [varchar](255) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+UNIQUE NONCLUSTERED 
+(
+	[Name] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+
+USE [SK_Invoice_DB]
+GO
+
+/****** Object:  Table [dbo].[Invoices]    Script Date: 20-07-2023 12:16:40 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Invoices](
+	[InvoiceNo] [uniqueidentifier] NOT NULL,
+	[Type] [uniqueidentifier] NULL,
+	[Amount] [decimal](18, 0) NULL,
+	[Description] [varchar](500) NULL,
+	[Tax] [decimal](18, 0) NULL,
+	[ClientId] [uniqueidentifier] NULL,
+	[DueDate] [datetime] NULL,
+	[Currency] [uniqueidentifier] NULL,
+	[CreatedBy] [uniqueidentifier] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[InvoiceNo] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Invoices]  WITH CHECK ADD FOREIGN KEY([ClientId])
+REFERENCES [dbo].[Clients] ([Id])
+GO
+
+ALTER TABLE [dbo].[Invoices]  WITH CHECK ADD FOREIGN KEY([Type])
+REFERENCES [dbo].[InvoiceTypes] ([Id])
+GO
+
+
+USE [SK_Invoice_DB]
+GO
+
+/****** Object:  Table [dbo].[Items]    Script Date: 20-07-2023 12:17:16 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Items](
+	[Id] [uniqueidentifier] NOT NULL,
+	[Name] [varchar](255) NULL,
+	[Rate] [decimal](18, 0) NULL,
+	[Quantity] [int] NULL,
+	[Tax] [decimal](18, 0) NULL,
+	[InvoiceNo] [uniqueidentifier] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Items]  WITH CHECK ADD FOREIGN KEY([InvoiceNo])
+REFERENCES [dbo].[Invoices] ([InvoiceNo])
+GO
+
+USE [SK_Invoice_DB]
+GO
+
+/****** Object:  Table [dbo].[Approvals]    Script Date: 20-07-2023 12:15:41 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Approvals](
+	[Id] [uniqueidentifier] NOT NULL,
+	[InvoiceNo] [uniqueidentifier] NULL,
+	[ApprovalBy] [uniqueidentifier] NULL,
+	[Status] [varchar](50) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Approvals]  WITH CHECK ADD FOREIGN KEY([ApprovalBy])
+REFERENCES [dbo].[Users] ([Id])
+GO
+
+ALTER TABLE [dbo].[Approvals]  WITH CHECK ADD FOREIGN KEY([InvoiceNo])
+REFERENCES [dbo].[Invoices] ([InvoiceNo])
+GO
+
+
+--
+USE [SK_Invoice_DB]
+GO
+
+/****** Object:  Table [dbo].[Clients]    Script Date: 20-07-2023 12:16:05 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Clients](
+	[Id] [uniqueidentifier] NOT NULL,
+	[Name] [varchar](255) NULL,
+	[Address] [varchar](500) NULL,
+	[Telephone] [varchar](20) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
